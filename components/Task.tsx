@@ -11,7 +11,7 @@ export type TaskProps = {
 function Task({ title, status, deadline }: TaskProps) {
   return (
     <TouchableOpacity style={styles.task}>
-      <View>
+      <View style={styles.left}>
         <Text style={styles.title}>{title}</Text>
         {deadline && <Text style={styles.text}>{String(deadline)}</Text>}
       </View>
@@ -39,11 +39,13 @@ const styles = StyleSheet.create({
     marginVertical: 4,
     backgroundColor: "rgba(255, 255, 255, 0.08)",
   },
+  left: {
+    flexShrink: 1,
+    paddingRight: 32,
+  },
   title: {
     color: "#fff",
     fontWeight: "600",
-    flexShrink: 1,
-    paddingRight: 32,
   },
   text: {
     color: "rgba(255, 255, 255, 0.7)",
