@@ -24,7 +24,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "dev.tgargula.todo_notion_viewer"
     },
     "web": {
       "favicon": "./assets/favicon.png"
