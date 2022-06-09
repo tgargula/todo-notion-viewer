@@ -1,10 +1,8 @@
 import { Client } from "@notionhq/client";
-import { NOTION_KEY, PRIVATE_DATABASE_ID } from "@env";
+import { PRIVATE_DATABASE_ID } from "@env";
 import { TaskProps } from "../components/Task";
 
-const notion = new Client({ auth: NOTION_KEY });
-
-export const fetchPrivateTasks = async (): Promise<TaskProps[]> => {
+export const fetchPrivateTasks = async (notion: Client): Promise<TaskProps[]> => {
   try {
     const response = await notion.databases.query({
       database_id: PRIVATE_DATABASE_ID,

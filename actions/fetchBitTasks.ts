@@ -1,10 +1,8 @@
 import { Client } from "@notionhq/client";
-import { NOTION_KEY, BIT_DATABASE_ID, NOTION_USER_ID } from "@env";
+import { BIT_DATABASE_ID, NOTION_USER_ID } from "@env";
 import { TaskProps } from "../components/Task";
 
-const notion = new Client({ auth: NOTION_KEY });
-
-export const fetchBitTasks = async (): Promise<TaskProps[]> => {
+export const fetchBitTasks = async (notion: Client): Promise<TaskProps[]> => {
   try {
     const response = await notion.databases.query({
       database_id: BIT_DATABASE_ID,
