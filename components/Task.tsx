@@ -1,3 +1,5 @@
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 import {
   StyleSheet,
   Text,
@@ -6,21 +8,28 @@ import {
   View,
 } from "react-native";
 import { getBackgroundColor, getTextColor } from "../styles/default";
+import { RootStackParamList } from "../types/types";
 
 type Status = "To do" | "In progress";
 
 export type TaskProps = {
+  id: string;
   title: string;
   status: Status;
   deadline?: Date;
+  category: 'personal' | 'bit' | 'beng';
 };
 
-function Task({ title, status, deadline }: TaskProps) {
+type NavigationProp = StackNavigationProp<RootStackParamList>;
+
+function Task({ id, title, status, deadline, category }: TaskProps) {
   const scheme = useColorScheme();
+  const navigation = useNavigation<NavigationProp>();
 
   return (
     <TouchableOpacity
       style={[styles.task, { backgroundColor: getBackgroundColor(scheme) }]}
+      onPress={() => navigation.navigate("TaskDetails", { id, title, category })}
     >
       <View style={styles.left}>
         <Text style={[styles.title, { color: getTextColor(scheme) }]}>
@@ -34,11 +43,11 @@ function Task({ title, status, deadline }: TaskProps) {
 }
 
 export function renderTask({
-  item: { title, status, deadline },
+  item: { id, title, status, deadline, category },
 }: {
   item: TaskProps;
 }) {
-  return <Task title={title} status={status} deadline={deadline} />;
+  return <Task id={id} title={title} status={status} deadline={deadline} category={category} />;
 }
 
 const styles = StyleSheet.create({

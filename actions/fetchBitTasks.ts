@@ -27,7 +27,9 @@ export const fetchBitTasks = async (notion: Client): Promise<TaskProps[]> => {
         ],
       },
     });
-    return response.results.map(({ properties }: any) => ({
+    return response.results.map(({ properties, id }: any) => ({
+      id,
+      category: 'bit',
       title: properties.Task.title[0].plain_text,
       status: properties.Status.select.name,
       deadline: properties.Deadline.date?.start,

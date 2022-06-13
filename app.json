@@ -1,13 +1,13 @@
 {
   "expo": {
-    "name": "todo-notion-viewer",
+    "name": "Todo Notion Viewer",
     "slug": "todo-notion-viewer",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/notion.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/notion.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -22,8 +22,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "foregroundImage": "./assets/notion.png"
       },
       "package": "dev.tgargula.todo_notion_viewer"
     },

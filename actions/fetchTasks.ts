@@ -4,6 +4,7 @@ import { TaskGroupProps } from "../components/TaskGroup";
 import { fetchBengTasks } from "./fetchBengTasks";
 import { fetchBitTasks } from "./fetchBitTasks";
 import { fetchPrivateTasks } from "./fetchPrivateTasks";
+import { fetchTaskDetails } from "./fetchTaskDetails";
 
 const notion = new Client({ auth: NOTION_KEY });
 
@@ -14,3 +15,7 @@ export const fetchTasks = async (): Promise<TaskGroupProps[]> => {
     { name: "Engineering Thesis", data: await fetchBengTasks(notion) },
   ]);
 };
+
+export const fetchTask = async (id: string): Promise<{ url: string, deadline: any }> => {
+  return fetchTaskDetails(notion, id);
+}
