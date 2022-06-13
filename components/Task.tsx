@@ -1,4 +1,11 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  useColorScheme,
+  View,
+} from "react-native";
+import { getBackgroundColor, getTextColor } from "../styles/default";
 
 type Status = "To do" | "In progress";
 
@@ -9,10 +16,16 @@ export type TaskProps = {
 };
 
 function Task({ title, status, deadline }: TaskProps) {
+  const scheme = useColorScheme();
+
   return (
-    <TouchableOpacity style={styles.task}>
+    <TouchableOpacity
+      style={[styles.task, { backgroundColor: getBackgroundColor(scheme) }]}
+    >
       <View style={styles.left}>
-        <Text style={styles.title}>{title}</Text>
+        <Text style={[styles.title, { color: getTextColor(scheme) }]}>
+          {title}
+        </Text>
         {deadline && <Text style={styles.text}>{String(deadline)}</Text>}
       </View>
       <Text style={styles.text}>{status}</Text>
@@ -37,17 +50,15 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 8,
     marginVertical: 4,
-    backgroundColor: "rgba(255, 255, 255, 0.08)",
   },
   left: {
     flexShrink: 1,
-    paddingRight: 32,
+    paddingRight: 16,
   },
   title: {
-    color: "#fff",
     fontWeight: "600",
   },
   text: {
-    color: "rgba(255, 255, 255, 0.7)",
+    color: "#888",
   },
 });

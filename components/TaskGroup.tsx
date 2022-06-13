@@ -1,4 +1,5 @@
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, StyleSheet, Text, useColorScheme, View } from "react-native";
+import { getTextColor } from "../styles/default";
 import { renderTask, TaskProps } from "./Task";
 
 export type TaskGroupProps = {
@@ -7,9 +8,13 @@ export type TaskGroupProps = {
 };
 
 function TaskGroup({ name, data }: TaskGroupProps) {
+  const scheme = useColorScheme();
+
   return (
     <View>
-      <Text style={styles.header}>{name}</Text>
+      <Text style={[styles.header, { color: getTextColor(scheme) }]}>
+        {name}
+      </Text>
       <FlatList
         data={data}
         renderItem={renderTask}
@@ -19,13 +24,16 @@ function TaskGroup({ name, data }: TaskGroupProps) {
   );
 }
 
-export function renderTaskGroup({ item: { name, data } }: { item: TaskGroupProps }) {
+export function renderTaskGroup({
+  item: { name, data },
+}: {
+  item: TaskGroupProps;
+}) {
   return <TaskGroup name={name} data={data} />;
 }
 
 const styles = StyleSheet.create({
   header: {
-    color: '#fff',
     lineHeight: 32,
     fontSize: 16,
     fontWeight: "600",

@@ -1,12 +1,21 @@
 import { useCallback, useEffect, useState } from "react";
-import { FlatList, View, RefreshControl, Text, StyleSheet } from "react-native";
+import {
+  FlatList,
+  View,
+  RefreshControl,
+  Text,
+  StyleSheet,
+  useColorScheme,
+} from "react-native";
 import { fetchTasks } from "../actions/fetchTasks";
+import { getTextColor } from "../styles/default";
 import { renderTaskGroup, TaskGroupProps } from "./TaskGroup";
 
 export function TaskGroupList() {
   const [tasks, setTasks] = useState<TaskGroupProps[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(false);
+  const scheme = useColorScheme();
 
   useEffect(() => {
     onRefresh();
@@ -27,14 +36,21 @@ export function TaskGroupList() {
 
   if (error) {
     return (
-      <View style={{ flex: 1 }}>
-        <Text style={styles.error}>An error occured ❌</Text>
+      <View style={styles.view}>
+        <Text
+          style={[
+            styles.error,
+            { color: getTextColor(scheme) }
+          ]}
+        >
+          An error occured ❌
+        </Text>
       </View>
     );
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.view}>
       <FlatList
         data={tasks}
         renderItem={renderTaskGroup}
@@ -47,8 +63,10 @@ export function TaskGroupList() {
 }
 
 const styles = StyleSheet.create({
+  view: {
+    flex: 1,
+  },
   error: {
-    color: "#fff",
     marginTop: 16,
     alignSelf: "center",
   },

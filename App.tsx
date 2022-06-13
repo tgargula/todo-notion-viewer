@@ -2,7 +2,7 @@ import "react-native-gesture-handler";
 
 import { StatusBar } from "expo-status-bar";
 
-import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { TaskGroupList } from "./components/TaskGroupList";
 
@@ -10,17 +10,7 @@ const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <NavigationContainer
-      theme={{
-        ...DefaultTheme,
-        colors: {
-          ...DefaultTheme.colors,
-          background: "#121212",
-          text: "#fff",
-          primary: "#03e",
-        },
-      }}
-    >
+    <NavigationContainer>
       {/* @ts-ignore */}
       <Stack.Navigator
         screenOptions={{
