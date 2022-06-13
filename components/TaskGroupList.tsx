@@ -3,51 +3,34 @@ import {
   FlatList,
   View,
   RefreshControl,
-  Text,
   StyleSheet,
-  useColorScheme,
 } from "react-native";
 import { fetchTasks } from "../actions/fetchTasks";
-import { getTextColor } from "../styles/default";
+import { EmptyListComponent } from "./EmptyListComponent";
 import { renderTaskGroup, TaskGroupProps } from "./TaskGroup";
 
 export function TaskGroupList() {
   const [tasks, setTasks] = useState<TaskGroupProps[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(false);
-  const scheme = useColorScheme();
 
   useEffect(() => {
     onRefresh();
   }, []);
 
   const onRefresh = useCallback(async () => {
-    setError(false);
     setRefreshing(true);
+    setError(false);
     try {
       const fetchedTasks = await fetchTasks();
       setTasks(fetchedTasks);
     } catch (err) {
       setError(true);
+      setTasks([]);
     } finally {
       setRefreshing(false);
     }
   }, [refreshing]);
-
-  if (error) {
-    return (
-      <View style={styles.view}>
-        <Text
-          style={[
-            styles.error,
-            { color: getTextColor(scheme) }
-          ]}
-        >
-          An error occured ❌
-        </Text>
-      </View>
-    );
-  }
 
   return (
     <View style={styles.view}>
@@ -57,6 +40,7 @@ export function TaskGroupList() {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
+        ListEmptyComponent={<EmptyListComponent refreshing={refreshing} error={error} />}
       />
     </View>
   );
