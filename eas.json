@@ -10,8 +10,7 @@
     "preview": {
       "android": {
         "buildType": "apk",
-        "gradleCommand": ":app:assembleRelease",
-        "developmentClient": true
+        "gradleCommand": ":app:assembleRelease"
       },
       "env": {
         "PRIVATE_DATABASE_ID": "3beded5d08e94a99b8c6018904ac23d9",

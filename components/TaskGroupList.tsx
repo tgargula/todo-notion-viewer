@@ -1,10 +1,6 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useCallback, useEffect, useState } from "react";
-import {
-  FlatList,
-  View,
-  RefreshControl,
-  StyleSheet,
-} from "react-native";
+import { FlatList, View, RefreshControl, StyleSheet } from "react-native";
 import { fetchTasks } from "../actions/fetchTasks";
 import { EmptyListComponent } from "./EmptyListComponent";
 import { renderTaskGroup, TaskGroupProps } from "./TaskGroup";
@@ -15,7 +11,20 @@ export function TaskGroupList() {
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    onRefresh();
+    (async () => {
+      await onRender();
+      onRefresh();
+    })();
+  }, []);
+
+  const onRender = useCallback(async () => {
+    const storedTasks = await AsyncStorage.getItem("tasks");
+    if (!storedTasks) return;
+
+    const maybeTasks = JSON.parse(storedTasks);
+    if (!Array.isArray(maybeTasks.tasks)) return;
+
+    setTasks(maybeTasks.tasks);
   }, []);
 
   const onRefresh = useCallback(async () => {
@@ -23,10 +32,16 @@ export function TaskGroupList() {
     setError(false);
     try {
       const fetchedTasks = await fetchTasks();
+      AsyncStorage.setItem(
+        "tasks",
+        JSON.stringify({
+          tasks: fetchedTasks,
+          lastUpdatedAt: new Date().toUTCString(),
+        })
+      );
       setTasks(fetchedTasks);
     } catch (err) {
       setError(true);
-      setTasks([]);
     } finally {
       setRefreshing(false);
     }
@@ -40,7 +55,10 @@ export function TaskGroupList() {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
-        ListEmptyComponent={<EmptyListComponent refreshing={refreshing} error={error} />}
+        ListEmptyComponent={
+          <EmptyListComponent refreshing={refreshing} error={error} />
+        }
+        contentContainerStyle={styles.contentContainer}
       />
     </View>
   );
@@ -49,6 +67,9 @@ export function TaskGroupList() {
 const styles = StyleSheet.create({
   view: {
     flex: 1,
+  },
+  contentContainer: {
+    paddingBottom: 16,
   },
   error: {
     marginTop: 16,
