@@ -89,7 +89,6 @@ export function TaskDetails() {
   const [title, ...data] = [
     { label: "Title", value: task?.title },
     { label: "Category", value: task?.category && getCategory(task.category) },
-    { label: "Status", value: task?.status },
     {
       label: "Deadline",
       value:
