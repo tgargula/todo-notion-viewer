@@ -1,5 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { format, formatDistance, formatRelative } from "date-fns";
 import {
   StyleSheet,
   Text,
@@ -8,16 +9,15 @@ import {
   View,
 } from "react-native";
 import { getBackgroundColor, getTextColor } from "../styles/default";
-import { RootStackParamList } from "../types/types";
-
-type Status = "To do" | "In progress";
+import { RootStackParamList, Status } from "../types/types";
+import { formatDeadline } from "../utils/formatDeadline";
 
 export type TaskProps = {
   id: string;
   title: string;
   status: Status;
   deadline?: Date;
-  category: 'personal' | 'bit' | 'beng';
+  category: "personal" | "bit" | "beng";
 };
 
 type NavigationProp = StackNavigationProp<RootStackParamList>;
@@ -29,13 +29,21 @@ function Task({ id, title, status, deadline, category }: TaskProps) {
   return (
     <TouchableOpacity
       style={[styles.task, { backgroundColor: getBackgroundColor(scheme) }]}
-      onPress={() => navigation.navigate("TaskDetails", { id, title, category })}
+      onPress={() =>
+        navigation.navigate("TaskDetails", { id, title, category })
+      }
     >
       <View style={styles.left}>
         <Text style={[styles.title, { color: getTextColor(scheme) }]}>
           {title}
         </Text>
-        {deadline && <Text style={styles.text}>{String(deadline)}</Text>}
+        {deadline && (
+          <Text style={styles.text}>
+            {formatDistance(formatDeadline(deadline), new Date(), {
+              addSuffix: true,
+            })}
+          </Text>
+        )}
       </View>
       <Text style={styles.text}>{status}</Text>
     </TouchableOpacity>
@@ -47,7 +55,15 @@ export function renderTask({
 }: {
   item: TaskProps;
 }) {
-  return <Task id={id} title={title} status={status} deadline={deadline} category={category} />;
+  return (
+    <Task
+      id={id}
+      title={title}
+      status={status}
+      deadline={deadline}
+      category={category}
+    />
+  );
 }
 
 const styles = StyleSheet.create({

@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createContext, useCallback, useContext, useState } from "react";
 import { TaskGroupProps } from "../components/TaskGroup";
+import { FetchAllResponse } from "../services/notion/types/response.type";
 
 type StorageItemMetadata = {
   lastUpdatedAt: Date;
@@ -8,7 +9,7 @@ type StorageItemMetadata = {
 
 type StorageItem = {
   tasks: {
-    data: TaskGroupProps[];
+    data: FetchAllResponse;
   } & StorageItemMetadata;
 };
 
