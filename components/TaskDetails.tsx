@@ -11,7 +11,6 @@ import {
   RefreshControl,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { fetchTask } from "../actions/fetchTasks";
 import { NotionService } from "../services/notion/notion.service";
 import { FetchOneResponse } from "../services/notion/types/response.type";
 import { getBackgroundColor } from "../styles/default";
