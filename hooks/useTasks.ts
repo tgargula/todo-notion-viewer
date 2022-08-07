@@ -1,12 +1,14 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
 import { useCallback, useEffect, useState } from "react";
-import { fetchTasks } from "../actions/fetchTasks";
-import { TaskGroupProps } from "../components/TaskGroup";
+import { NotionService } from "../services/notion/notion.service";
+import { FetchAllResponse } from "../services/notion/types/response.type";
 import useStorage from "./useStorage";
 
 const useTasks = () => {
+  const notion = new NotionService();
+  const navigation = useNavigation();
   const [tasks, setTasks] = useState<{
-    data: TaskGroupProps[];
+    data: FetchAllResponse;
     lastUpdatedAt: Date | null;
   }>({ data: [], lastUpdatedAt: null });
   const [refreshing, setRefreshing] = useState(false);
@@ -14,10 +16,12 @@ const useTasks = () => {
   const { setItem, getItem } = useStorage();
 
   useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', onRefresh);
     (async () => {
       await onRender();
       onRefresh();
     })();
+    return unsubscribe;
   }, []);
 
   const onRender = useCallback(async () => {
@@ -31,7 +35,7 @@ const useTasks = () => {
     setRefreshing(true);
     setError(false);
     try {
-      const fetchedTasks = await fetchTasks();
+      const fetchedTasks = await notion.fetchAllTasks();
       setItem("tasks", fetchedTasks);
       setTasks({ data: fetchedTasks, lastUpdatedAt: new Date() });
     } catch (err) {

@@ -1,4 +1,5 @@
 declare module "@env" {
+  export const NODE_ENV: string;
   export const NOTION_KEY: string;
   export const PRIVATE_DATABASE_ID: string;
   export const BIT_DATABASE_ID: string;

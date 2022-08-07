@@ -1,6 +1,6 @@
 import { formatDistance, max, min } from "date-fns";
-import { useEffect, useState } from "react";
 import { FlatList, StyleSheet, Text, useColorScheme, View } from "react-native";
+import useNow from "../hooks/useNow";
 import { getTextColor } from "../styles/default";
 import { renderTask, TaskProps } from "./Task";
 
@@ -12,14 +12,7 @@ export type TaskGroupProps = {
 
 function TaskGroup({ name, data, lastUpdatedAt }: TaskGroupProps) {
   const scheme = useColorScheme();
-  const [now, setNow] = useState(new Date());
-
-  useEffect(() => {
-    const id = setInterval(() => {
-      setNow(new Date());
-    }, 15000);
-    return () => clearInterval(id);
-  }, [lastUpdatedAt]);
+  const now = useNow([lastUpdatedAt]);
 
   return (
     <View>

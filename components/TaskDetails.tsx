@@ -1,4 +1,5 @@
 import { RouteProp, useRoute } from "@react-navigation/native";
+import { format, formatDistance } from "date-fns";
 import { useCallback, useEffect, useState } from "react";
 import {
   Text,
@@ -10,9 +11,12 @@ import {
   RefreshControl,
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { fetchTask } from "../actions/fetchTasks";
+import { NotionService } from "../services/notion/notion.service";
+import { FetchOneResponse } from "../services/notion/types/response.type";
 import { getBackgroundColor } from "../styles/default";
-import { RootStackParamList } from "../types/types";
+import { Category, RootStackParamList } from "../types/types";
+import { formatDeadline } from "../utils/formatDeadline";
+import { StatusBar } from "./StatusBar";
 
 type RouteProps = RouteProp<RootStackParamList, "TaskDetails">;
 
@@ -41,17 +45,21 @@ const renderItem = ({
 );
 
 export function TaskDetails() {
+  const notion = new NotionService();
   const route = useRoute<RouteProps>();
   const [isLoading, setIsLoading] = useState(true);
   const [timerDone, setTimerDone] = useState(false);
   const [notionUrl, setNotionUrl] = useState("");
-  const [task, setTask] = useState<any>(null);
+  const [task, setTask] = useState<FetchOneResponse | null>(null);
   const [refreshing, setRefreshing] = useState(true);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
-      const task = await fetchTask(route.params.id);
+      const task = await notion.fetchOneByCategory(
+        { id: route.params.id },
+        route.params.category as Category
+      );
       setTask(task);
       setNotionUrl(task.url);
       setIsLoading(false);
@@ -77,15 +85,44 @@ export function TaskDetails() {
     return <Text style={styles.loading}>The task is loading</Text>;
   }
 
+  const deadline = formatDeadline(task?.deadline);
   const [title, ...data] = [
-    { label: "Title", value: route.params.title },
-    { label: "Category", value: getCategory(route.params.category) },
-    { label: "Status", value: task.status },
-  ];
-
-  if (task.deadline) {
-    data.push({ label: "Deadline", value: task.deadline });
-  }
+    { label: "Title", value: task?.title },
+    { label: "Category", value: task?.category && getCategory(task.category) },
+    {
+      label: "Deadline",
+      value:
+        deadline &&
+        `${format(deadline, "yyyy-MM-dd, HH:mm:ss")} (${formatDistance(
+          deadline,
+          new Date(),
+          { addSuffix: true }
+        )})`,
+    },
+    {
+      label: "Created At",
+      value:
+        task?.createdAt &&
+        `${format(task.createdAt, "yyyy-MM-dd, HH:mm:ss")} (${formatDistance(
+          task.createdAt,
+          new Date(),
+          { addSuffix: true }
+        )})`,
+    },
+    {
+      label: "Updated At",
+      value:
+        task?.updatedAt &&
+        `${format(task.updatedAt, "yyyy-MM-dd, HH:mm:ss")} (${formatDistance(
+          task.updatedAt,
+          new Date(),
+          { addSuffix: true }
+        )})`,
+    },
+    { label: "Priority", value: task?.priority },
+    { label: "Cost", value: task?.cost },
+    { label: "Tags", value: task?.tags?.join(", ") },
+  ].filter(({ value }) => value) as Array<{ label: string; value: string }>;
 
   return (
     <View style={styles.layout}>
@@ -105,6 +142,11 @@ export function TaskDetails() {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
+      />
+      <StatusBar
+        id={route.params.id}
+        category={route.params.category as Category}
+        status={task?.status}
       />
     </View>
   );
