@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import { useCallback, useEffect, useState } from "react";
 import { NotionService } from "../services/notion/notion.service";
 import { FetchAllResponse } from "../services/notion/types/response.type";
@@ -5,6 +6,7 @@ import useStorage from "./useStorage";
 
 const useTasks = () => {
   const notion = new NotionService();
+  const navigation = useNavigation();
   const [tasks, setTasks] = useState<{
     data: FetchAllResponse;
     lastUpdatedAt: Date | null;
@@ -14,10 +16,12 @@ const useTasks = () => {
   const { setItem, getItem } = useStorage();
 
   useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', onRefresh);
     (async () => {
       await onRender();
       onRefresh();
     })();
+    return unsubscribe;
   }, []);
 
   const onRender = useCallback(async () => {

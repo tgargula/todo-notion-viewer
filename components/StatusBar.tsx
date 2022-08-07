@@ -49,14 +49,6 @@ export function StatusBar({ id, category, status }: Props) {
 
   const statusList: Array<Status> = ["Backlog", "To do", "In progress", "Done"];
 
-  const cooldown = useCallback(() => {
-    const timerId = setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
-
-    return () => clearTimeout(timerId);
-  }, []);
-
   return (
     <View>
       <Text>Status</Text>
@@ -87,7 +79,7 @@ export function StatusBar({ id, category, status }: Props) {
                     ToastAndroid.SHORT
                   );
                 } finally {
-                  cooldown();
+                  setIsLoading(false);
                 }
               }}
             >
