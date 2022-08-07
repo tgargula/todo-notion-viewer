@@ -1,57 +1,16 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useCallback, useEffect, useState } from "react";
 import { FlatList, View, RefreshControl, StyleSheet } from "react-native";
-import { fetchTasks } from "../actions/fetchTasks";
+import useTasks from "../hooks/useTasks";
 import { EmptyListComponent } from "./EmptyListComponent";
-import { renderTaskGroup, TaskGroupProps } from "./TaskGroup";
+import { renderTaskGroup } from "./TaskGroup";
 
 export function TaskGroupList() {
-  const [tasks, setTasks] = useState<TaskGroupProps[]>([]);
-  const [refreshing, setRefreshing] = useState(false);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    (async () => {
-      await onRender();
-      onRefresh();
-    })();
-  }, []);
-
-  const onRender = useCallback(async () => {
-    const storedTasks = await AsyncStorage.getItem("tasks");
-    if (!storedTasks) return;
-
-    const maybeTasks = JSON.parse(storedTasks);
-    if (!Array.isArray(maybeTasks.tasks)) return;
-
-    setTasks(maybeTasks.tasks);
-  }, []);
-
-  const onRefresh = useCallback(async () => {
-    setRefreshing(true);
-    setError(false);
-    try {
-      const fetchedTasks = await fetchTasks();
-      AsyncStorage.setItem(
-        "tasks",
-        JSON.stringify({
-          tasks: fetchedTasks,
-          lastUpdatedAt: new Date().toUTCString(),
-        })
-      );
-      setTasks(fetchedTasks);
-    } catch (err) {
-      setError(true);
-    } finally {
-      setRefreshing(false);
-    }
-  }, [refreshing]);
+  const { tasks, error, refreshing, onRefresh } = useTasks();
 
   return (
     <View style={styles.view}>
       <FlatList
-        data={tasks}
-        renderItem={renderTaskGroup}
+        data={tasks.data}
+        renderItem={(item) => renderTaskGroup(item, tasks.lastUpdatedAt)}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
