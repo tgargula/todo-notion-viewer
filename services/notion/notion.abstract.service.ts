@@ -75,6 +75,7 @@ export abstract class NotionAbstractService {
     try {
       const response: any = await this.notion.pages.retrieve({ page_id: id });
 
+      const deadline = response.properties[propertyNames.deadline].date?.start;
       return {
         id,
         category,
@@ -84,8 +85,8 @@ export abstract class NotionAbstractService {
         createdAt: new Date(response.created_time),
         updatedAt: new Date(response.last_edited_time),
         url: response.url,
-        status: response.properties.Status.select.name,
-        deadline: response.properties.Deadline.date?.start,
+        status: response.properties[propertyNames.status].select.name,
+        deadline: deadline && new Date(deadline),
 
         tags: propertyNames.tags
           ? response.properties[propertyNames.tags].multi_select?.map(
