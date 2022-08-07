@@ -1,46 +1,23 @@
-import { useCallback, useEffect, useState } from "react";
-import {
-  FlatList,
-  View,
-  RefreshControl,
-  StyleSheet,
-} from "react-native";
-import { fetchTasks } from "../actions/fetchTasks";
+import { FlatList, View, RefreshControl, StyleSheet } from "react-native";
+import useTasks from "../hooks/useTasks";
 import { EmptyListComponent } from "./EmptyListComponent";
-import { renderTaskGroup, TaskGroupProps } from "./TaskGroup";
+import { renderTaskGroup } from "./TaskGroup";
 
 export function TaskGroupList() {
-  const [tasks, setTasks] = useState<TaskGroupProps[]>([]);
-  const [refreshing, setRefreshing] = useState(false);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    onRefresh();
-  }, []);
-
-  const onRefresh = useCallback(async () => {
-    setRefreshing(true);
-    setError(false);
-    try {
-      const fetchedTasks = await fetchTasks();
-      setTasks(fetchedTasks);
-    } catch (err) {
-      setError(true);
-      setTasks([]);
-    } finally {
-      setRefreshing(false);
-    }
-  }, [refreshing]);
+  const { tasks, error, refreshing, onRefresh } = useTasks();
 
   return (
     <View style={styles.view}>
       <FlatList
-        data={tasks}
-        renderItem={renderTaskGroup}
+        data={tasks.data}
+        renderItem={(item) => renderTaskGroup(item, tasks.lastUpdatedAt)}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
-        ListEmptyComponent={<EmptyListComponent refreshing={refreshing} error={error} />}
+        ListEmptyComponent={
+          <EmptyListComponent refreshing={refreshing} error={error} />
+        }
+        contentContainerStyle={styles.contentContainer}
       />
     </View>
   );
@@ -49,6 +26,9 @@ export function TaskGroupList() {
 const styles = StyleSheet.create({
   view: {
     flex: 1,
+  },
+  contentContainer: {
+    paddingBottom: 16,
   },
   error: {
     marginTop: 16,

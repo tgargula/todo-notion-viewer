@@ -10,14 +10,14 @@
     "preview": {
       "android": {
         "buildType": "apk",
-        "gradleCommand": ":app:assembleRelease",
-        "developmentClient": true
+        "gradleCommand": ":app:assembleRelease"
       },
       "env": {
         "PRIVATE_DATABASE_ID": "3beded5d08e94a99b8c6018904ac23d9",
         "BIT_DATABASE_ID": "57d19e95bcb442a88a70b82be83d9fef",
         "BENG_DATABASE_ID": "6aa6cade39a747a08c1a64ec5d323b6f",
-        "NOTION_USER_ID": "91ea2a88f64d465ba8f01541e2ee3dd5"
+        "NOTION_USER_ID": "91ea2a88f64d465ba8f01541e2ee3dd5",
+        "NODE_ENV": "preview"
       }
     },
     "production": {}

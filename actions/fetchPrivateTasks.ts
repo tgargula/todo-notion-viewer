@@ -2,7 +2,9 @@ import { Client } from "@notionhq/client";
 import { PRIVATE_DATABASE_ID } from "@env";
 import { TaskProps } from "../components/Task";
 
-export const fetchPrivateTasks = async (notion: Client): Promise<TaskProps[]> => {
+export const fetchPrivateTasks = async (
+  notion: Client
+): Promise<TaskProps[]> => {
   try {
     const response = await notion.databases.query({
       database_id: PRIVATE_DATABASE_ID,
@@ -21,8 +23,10 @@ export const fetchPrivateTasks = async (notion: Client): Promise<TaskProps[]> =>
     });
     return response.results.map(({ properties, id }: any) => ({
       id,
-      category: 'personal',
-      title: properties.Name.title[0].plain_text,
+      category: "personal",
+      title: properties.Name.title
+        .map(({ plain_text: text }: { plain_text: string }) => text)
+        .join(""),
       status: properties.Status.select.name,
       deadline: properties.Deadline.date?.start,
     }));
