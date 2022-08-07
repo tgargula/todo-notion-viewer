@@ -6,7 +6,7 @@ import {
   FetchOneOptions,
   GeneralOptions,
 } from "./types/options.type";
-import { FetchOneRequest } from "./types/request.type";
+import { FetchOneRequest, UpdateStatusRequest } from "./types/request.type";
 import { FetchManyResponse, FetchOneResponse } from "./types/response.type";
 
 let notionClient: Client | undefined;
@@ -108,5 +108,23 @@ export abstract class NotionAbstractService {
       console.error(err);
       throw err;
     }
+  }
+
+  async _updateOneByOptions(
+    { taskId, status }: UpdateStatusRequest,
+    { propertyNames }: GeneralOptions
+  ) {
+    const response = await this.notion.pages.update({
+      page_id: taskId,
+      properties: {
+        [propertyNames.status]: {
+          select: {
+            name: status,
+          },
+        },
+      },
+    });
+
+    return response;
   }
 }

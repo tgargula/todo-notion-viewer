@@ -1,13 +1,13 @@
 import { config, statusOrder } from "./config";
 import { NotionAbstractService } from "./notion.abstract.service";
 import { Category } from "../../types/types";
-import { FetchOneRequest } from "./types/request.type";
+import { FetchOneRequest, UpdateStatusRequest } from "./types/request.type";
 import {
   FetchAllResponse,
   FetchManyResponse,
   FetchOneResponse,
+  UpdateStatusResponse,
 } from "./types/response.type";
-import { compareAsc } from "date-fns";
 import { compareNullableAsc } from "../../utils/compareNullableAsc";
 
 export class NotionService extends NotionAbstractService {
@@ -44,5 +44,9 @@ export class NotionService extends NotionAbstractService {
       ...config[category].general,
       ...config[category].fetchOne,
     });
+  }
+
+  async updateStatus(req: UpdateStatusRequest, category: Category): Promise<UpdateStatusResponse> {
+    return this._updateOneByOptions(req, { ...config[category].general });
   }
 }

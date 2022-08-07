@@ -3,6 +3,6 @@ export type RootStackParamList = {
   TaskDetails: { id: string, title: string, category: string };
 };
 
-export type Status = "Backlog" | "To do" | "In progress";
+export type Status = "Backlog" | "To do" | "In progress" | "Done";
 
 export type Category = "personal" | "bit" | "beng";

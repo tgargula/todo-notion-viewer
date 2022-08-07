@@ -69,4 +69,5 @@ export const statusOrder: Record<Status, number> = {
   Backlog: 0,
   "To do": 1,
   "In progress": 2,
+  Done: 3,
 };

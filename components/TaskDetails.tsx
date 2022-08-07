@@ -16,6 +16,7 @@ import { FetchOneResponse } from "../services/notion/types/response.type";
 import { getBackgroundColor } from "../styles/default";
 import { Category, RootStackParamList } from "../types/types";
 import { formatDeadline } from "../utils/formatDeadline";
+import { StatusBar } from "./StatusBar";
 
 type RouteProps = RouteProp<RootStackParamList, "TaskDetails">;
 
@@ -142,6 +143,11 @@ export function TaskDetails() {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
+      />
+      <StatusBar
+        id={route.params.id}
+        category={route.params.category as Category}
+        status={task?.status}
       />
     </View>
   );

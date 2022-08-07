@@ -18,7 +18,7 @@ export type FetchOneResponse = {
   url: string;
   category: Category;
   title: string;
-  status: string;
+  status: Status;
   createdAt: Date;
   updatedAt: Date;
   deadline: Date | undefined;
@@ -28,3 +28,5 @@ export type FetchOneResponse = {
   comments: string | undefined;
   content: string | undefined;
 };
+
+export type UpdateStatusResponse = unknown;
