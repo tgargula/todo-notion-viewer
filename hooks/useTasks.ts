@@ -36,7 +36,7 @@ const useTasks = () => {
     setError(false);
     try {
       const fetchedTasks = await notion.fetchAllTasks();
-      setItem("tasks", fetchedTasks);
+      await setItem("tasks", fetchedTasks);
       setTasks({ data: fetchedTasks, lastUpdatedAt: new Date() });
     } catch (err) {
       setError(true);
