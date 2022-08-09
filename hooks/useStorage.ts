@@ -1,6 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createContext, useCallback, useContext, useState } from "react";
-import { TaskGroupProps } from "../components/TaskGroup";
 import { FetchAllResponse } from "../services/notion/types/response.type";
 
 type StorageItemMetadata = {
@@ -16,7 +15,10 @@ type StorageItem = {
 type StorageKey = keyof StorageItem;
 
 export const storageContext = createContext<{
-  setItem: <T extends StorageKey>(key: T, data: StorageItem[T]["data"]) => void;
+  setItem: <T extends StorageKey>(
+    key: T,
+    data: StorageItem[T]["data"]
+  ) => Promise<void>;
   getItem: <T extends StorageKey>(
     key: T
   ) => Promise<
@@ -27,8 +29,8 @@ export const storageContext = createContext<{
     | undefined
   >;
 }>({
-  setItem: () => {},
-  getItem: () => Promise.resolve(undefined),
+  setItem: () => Promise.reject(),
+  getItem: () => Promise.reject(),
 });
 
 const useStorage = () => {
@@ -36,19 +38,20 @@ const useStorage = () => {
 };
 
 export const useProvideStorage = () => {
-  if (process.env.NODE_ENV === "development") AsyncStorage.clear(); // TEMP: To make it work with hot reloading
+  // Hotfix: Disables async storage
+  AsyncStorage.clear();
 
   const [updates, setUpdates] = useState<Record<StorageKey, Date>>({
     tasks: new Date(),
   });
 
   const setItem = useCallback(
-    <T extends StorageKey>(key: T, data: StorageItem[T]["data"]) => {
+    async <T extends StorageKey>(key: T, data: StorageItem[T]["data"]) => {
       const item = {
         data,
         lastUpdatedAt: new Date().toUTCString(),
       };
-      AsyncStorage.setItem(key, JSON.stringify(item));
+      await AsyncStorage.setItem(key, JSON.stringify(item));
       setUpdates({ ...updates, [key]: new Date().toUTCString() });
     },
     []
