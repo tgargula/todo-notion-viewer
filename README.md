@@ -1,4 +1,4 @@
-# Todo Notion Viewer
+# Notodo
 
 This mobile app aggregates basic information about the tasks stored in different Notion databases.
 
