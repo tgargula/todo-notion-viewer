@@ -10,6 +10,7 @@ export type FetchManyResponse = Array<{
   category: Category;
   title: string;
   status: Status;
+  subject: string | undefined;
   deadline: Date | undefined;
 }>;
 
@@ -21,6 +22,7 @@ export type FetchOneResponse = {
   status: Status;
   createdAt: Date;
   updatedAt: Date;
+  subject: string | undefined;
   deadline: Date | undefined;
   tags: Array<string> | undefined;
   priority: string | undefined;

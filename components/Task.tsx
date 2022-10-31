@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { format, formatDistance, formatRelative } from "date-fns";
+import { format, formatDistance, formatRelative, sub } from "date-fns";
 import {
   StyleSheet,
   Text,
@@ -16,13 +16,14 @@ export type TaskProps = {
   id: string;
   title: string;
   status: Status;
+  subject?: string;
   deadline?: Date;
   category: Category;
 };
 
 type NavigationProp = StackNavigationProp<RootStackParamList>;
 
-function Task({ id, title, status, deadline, category }: TaskProps) {
+function Task({ id, title, status, deadline, category, subject }: TaskProps) {
   const scheme = useColorScheme();
   const navigation = useNavigation<NavigationProp>();
 
@@ -34,6 +35,7 @@ function Task({ id, title, status, deadline, category }: TaskProps) {
       }
     >
       <View style={styles.left}>
+        {subject && <Text style={styles.title}>{subject}</Text>}
         <Text style={[styles.title, { color: getTextColor(scheme) }]}>
           {title}
         </Text>
@@ -51,7 +53,7 @@ function Task({ id, title, status, deadline, category }: TaskProps) {
 }
 
 export function renderTask({
-  item: { id, title, status, deadline, category },
+  item: { id, title, status, deadline, category, subject },
 }: {
   item: TaskProps;
 }) {
@@ -60,6 +62,7 @@ export function renderTask({
       id={id}
       title={title}
       status={status}
+      subject={subject}
       deadline={deadline}
       category={category}
     />

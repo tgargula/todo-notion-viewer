@@ -17,6 +17,7 @@ export const config: Record<Category, Options> = {
         title: "Name",
         status: "Status",
         deadline: "Deadline",
+        subject: null,
         tags: "Tags",
         priority: "Priority",
         cost: "Cost",
@@ -31,6 +32,30 @@ export const config: Record<Category, Options> = {
       personFilterName: "Assign",
     },
   },
+  university: {
+    displayName: "University",
+    general: {
+      category: "university",
+      databaseId: UNIVERSITY_DATABASE_ID,
+      propertyNames: {
+        title: "Name",
+        status: "Status",
+        deadline: "Deadline",
+        subject: "Subject",
+        tags: null,
+        priority: null,
+        cost: null,
+        comments: null,
+      },
+      propertyTypes: {
+        status: "status",
+      },
+    },
+    fetchOne: {},
+    fetchMany: {
+      personFilterName: null,
+    },
+  },
   bit: {
     displayName: "Scientific group",
     general: {
@@ -40,6 +65,7 @@ export const config: Record<Category, Options> = {
         title: "Task",
         status: "Status",
         deadline: "Deadline",
+        subject: null,
         tags: null,
         priority: null,
         cost: null,
@@ -63,6 +89,7 @@ export const config: Record<Category, Options> = {
         title: "Name",
         status: "Status",
         deadline: "Deadline",
+        subject: null,
         tags: null,
         priority: null,
         cost: null,
@@ -70,29 +97,6 @@ export const config: Record<Category, Options> = {
       },
       propertyTypes: {
         status: "select",
-      },
-    },
-    fetchOne: {},
-    fetchMany: {
-      personFilterName: null,
-    },
-  },
-  university: {
-    displayName: "University",
-    general: {
-      category: "university",
-      databaseId: UNIVERSITY_DATABASE_ID,
-      propertyNames: {
-        title: "Name",
-        status: "Status",
-        deadline: "Deadline",
-        tags: null,
-        priority: null,
-        cost: null,
-        comments: null,
-      },
-      propertyTypes: {
-        status: "status",
       },
     },
     fetchOne: {},

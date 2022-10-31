@@ -14,6 +14,10 @@ function TaskGroup({ name, data, lastUpdatedAt }: TaskGroupProps) {
   const scheme = useColorScheme();
   const now = useNow([lastUpdatedAt]);
 
+  if (!data?.length) {
+    return null;
+  }
+
   return (
     <View>
       <View style={styles.spaceBetween}>
@@ -32,7 +36,7 @@ function TaskGroup({ name, data, lastUpdatedAt }: TaskGroupProps) {
       <FlatList
         data={data}
         renderItem={renderTask}
-        keyExtractor={(item) => item.title}
+        keyExtractor={(item) => `${item.title}-${item.subject}`}
       />
     </View>
   );

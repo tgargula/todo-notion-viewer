@@ -49,7 +49,7 @@ export abstract class NotionAbstractService {
     propertyNames,
     propertyTypes,
     personFilterName,
-    status = ["Backlog", "To do", "In progress"],
+    status = ["To do", "In progress"],
   }: GeneralOptions & FetchManyOptions): Promise<FetchManyResponse> {
     try {
       const statusFilter = this._getStatusFilter(
@@ -82,7 +82,11 @@ export abstract class NotionAbstractService {
           title: properties[propertyNames.title].title
             .map(({ plain_text: text }: { plain_text: string }) => text)
             .join(""),
-          status: properties[propertyNames.status][propertyTypes.status].name as Status,
+          status: properties[propertyNames.status][propertyTypes.status]
+            .name as Status,
+          subject: propertyNames.subject
+            ? properties[propertyNames.subject].select.name
+            : undefined,
           deadline: deadline ? new Date(deadline.start) : undefined,
         };
       });
@@ -99,7 +103,6 @@ export abstract class NotionAbstractService {
     try {
       const response: any = await this.notion.pages.retrieve({ page_id: id });
 
-      console.log({o: response.properties[propertyNames.status], type: propertyTypes.status, category})
       const deadline = response.properties[propertyNames.deadline].date?.start;
       return {
         id,
@@ -110,8 +113,12 @@ export abstract class NotionAbstractService {
         createdAt: new Date(response.created_time),
         updatedAt: new Date(response.last_edited_time),
         url: response.url,
-        status: response.properties[propertyNames.status][propertyTypes.status].name,
+        status:
+          response.properties[propertyNames.status][propertyTypes.status].name,
         deadline: deadline && new Date(deadline),
+        subject: propertyNames.subject
+          ? response.properties[propertyNames.subject].select.name
+          : undefined,
 
         tags: propertyNames.tags
           ? response.properties[propertyNames.tags].multi_select?.map(

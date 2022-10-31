@@ -15,20 +15,21 @@ export class NotionService extends NotionAbstractService {
     super();
   }
 
-  async fetchAllTasks(): Promise<FetchAllResponse> {
-    const categories: Array<Category> = ["beng", "bit", "personal", "university"];
+  async fetchAllTasks(showBacklog: boolean): Promise<FetchAllResponse> {
+    const categories: Array<Category> = ["university", "beng", "bit", "personal"];
     return Promise.all(
       categories.map(async (category) => ({
         name: config[category].displayName,
-        data: await this.fetchManyByCategory(category),
+        data: await this.fetchManyByCategory(category, showBacklog),
       }))
     );
   }
 
-  async fetchManyByCategory(category: Category): Promise<FetchManyResponse> {
+  async fetchManyByCategory(category: Category, showBacklog: boolean): Promise<FetchManyResponse> {
     const response = await this._fetchManyByOptions({
       ...config[category].general,
       ...config[category].fetchMany,
+      status: showBacklog ? ['Backlog', 'To do', 'In progress'] : ['To do', 'In progress'],
     });
 
     return response

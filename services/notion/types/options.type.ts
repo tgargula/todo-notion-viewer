@@ -5,6 +5,7 @@ interface PropertyNames extends Record<Property, string | null> {
   title: string;
   status: string;
   deadline: string;
+  subject: string | null;
   tags: string | null;
   priority: string | null;
   cost: string | null;

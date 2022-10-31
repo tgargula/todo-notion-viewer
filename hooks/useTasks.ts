@@ -13,13 +13,14 @@ const useTasks = () => {
   }>({ data: [], lastUpdatedAt: null });
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(false);
+  const [showBacklog, setShowBacklog] = useState(false);
   const { setItem, getItem } = useStorage();
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener('focus', onRefresh);
+    const unsubscribe = navigation.addListener("focus", () => onRefresh(showBacklog));
     (async () => {
       await onRender();
-      onRefresh();
+      onRefresh(showBacklog);
     })();
     return unsubscribe;
   }, []);
@@ -31,11 +32,11 @@ const useTasks = () => {
     setTasks(tasks);
   }, []);
 
-  const onRefresh = useCallback(async () => {
+  const onRefresh = useCallback(async (showBacklog: boolean) => {
     setRefreshing(true);
     setError(false);
     try {
-      const fetchedTasks = await notion.fetchAllTasks();
+      const fetchedTasks = await notion.fetchAllTasks(showBacklog);
       await setItem("tasks", fetchedTasks);
       setTasks({ data: fetchedTasks, lastUpdatedAt: new Date() });
     } catch (err) {
@@ -45,7 +46,7 @@ const useTasks = () => {
     }
   }, [refreshing]);
 
-  return { tasks, error, refreshing, onRefresh };
+  return { tasks, error, refreshing, onRefresh, showBacklog, setShowBacklog };
 };
 
 export default useTasks;
