@@ -5,4 +5,5 @@ declare module "@env" {
   export const BIT_DATABASE_ID: string;
   export const BENG_DATABASE_ID: string;
   export const NOTION_USER_ID: string;
+  export const UNIVERSITY_DATABASE_ID: string;
 }

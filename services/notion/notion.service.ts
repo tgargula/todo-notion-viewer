@@ -16,7 +16,7 @@ export class NotionService extends NotionAbstractService {
   }
 
   async fetchAllTasks(): Promise<FetchAllResponse> {
-    const categories: Array<Category> = ["beng", "bit", "personal"];
+    const categories: Array<Category> = ["beng", "bit", "personal", "university"];
     return Promise.all(
       categories.map(async (category) => ({
         name: config[category].displayName,

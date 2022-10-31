@@ -9,7 +9,7 @@ import {
   View,
 } from "react-native";
 import { getBackgroundColor, getTextColor } from "../styles/default";
-import { RootStackParamList, Status } from "../types/types";
+import { Category, RootStackParamList, Status } from "../types/types";
 import { formatDeadline } from "../utils/formatDeadline";
 
 export type TaskProps = {
@@ -17,7 +17,7 @@ export type TaskProps = {
   title: string;
   status: Status;
   deadline?: Date;
-  category: "personal" | "bit" | "beng";
+  category: Category;
 };
 
 type NavigationProp = StackNavigationProp<RootStackParamList>;

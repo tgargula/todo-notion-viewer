@@ -1,4 +1,9 @@
-import { BENG_DATABASE_ID, BIT_DATABASE_ID, PRIVATE_DATABASE_ID } from "@env";
+import {
+  BENG_DATABASE_ID,
+  BIT_DATABASE_ID,
+  PRIVATE_DATABASE_ID,
+  UNIVERSITY_DATABASE_ID,
+} from "@env";
 import { Category, Status } from "../../types/types";
 import { Options } from "./types/options.type";
 
@@ -16,6 +21,9 @@ export const config: Record<Category, Options> = {
         priority: "Priority",
         cost: "Cost",
         comments: null,
+      },
+      propertyTypes: {
+        status: "select",
       },
     },
     fetchOne: {},
@@ -37,6 +45,9 @@ export const config: Record<Category, Options> = {
         cost: null,
         comments: "Comments",
       },
+      propertyTypes: {
+        status: "select",
+      },
     },
     fetchOne: {},
     fetchMany: {
@@ -56,6 +67,32 @@ export const config: Record<Category, Options> = {
         priority: null,
         cost: null,
         comments: null,
+      },
+      propertyTypes: {
+        status: "select",
+      },
+    },
+    fetchOne: {},
+    fetchMany: {
+      personFilterName: null,
+    },
+  },
+  university: {
+    displayName: "University",
+    general: {
+      category: "university",
+      databaseId: UNIVERSITY_DATABASE_ID,
+      propertyNames: {
+        title: "Name",
+        status: "Status",
+        deadline: "Deadline",
+        tags: null,
+        priority: null,
+        cost: null,
+        comments: null,
+      },
+      propertyTypes: {
+        status: "status",
       },
     },
     fetchOne: {},

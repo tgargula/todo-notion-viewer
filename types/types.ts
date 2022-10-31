@@ -5,4 +5,4 @@ export type RootStackParamList = {
 
 export type Status = "Backlog" | "To do" | "In progress" | "Done";
 
-export type Category = "personal" | "bit" | "beng";
+export type Category = "personal" | "bit" | "beng" | "university";

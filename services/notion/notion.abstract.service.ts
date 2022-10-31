@@ -5,6 +5,7 @@ import {
   FetchManyOptions,
   FetchOneOptions,
   GeneralOptions,
+  StatusType,
 } from "./types/options.type";
 import { FetchOneRequest, UpdateStatusRequest } from "./types/request.type";
 import { FetchManyResponse, FetchOneResponse } from "./types/response.type";
@@ -19,20 +20,43 @@ export abstract class NotionAbstractService {
     this.notion = notionClient;
   }
 
+  _getStatusFilter(
+    status: Array<Status>,
+    statusType: StatusType,
+    statusName: string
+  ) {
+    switch (statusType) {
+      case "select":
+        return {
+          or: status.map((name) => ({
+            property: statusName,
+            select: { equals: name },
+          })),
+        };
+      case "status":
+        return {
+          or: status.map((name) => ({
+            property: statusName,
+            status: { equals: name },
+          })),
+        };
+    }
+  }
+
   async _fetchManyByOptions({
     category,
     databaseId,
     propertyNames,
+    propertyTypes,
     personFilterName,
     status = ["Backlog", "To do", "In progress"],
   }: GeneralOptions & FetchManyOptions): Promise<FetchManyResponse> {
     try {
-      const statusFilter = {
-        or: status.map((name) => ({
-          property: propertyNames.status,
-          select: { equals: name },
-        })),
-      };
+      const statusFilter = this._getStatusFilter(
+        status,
+        propertyTypes.status,
+        propertyNames.status
+      );
       const filter = personFilterName
         ? {
             and: [
@@ -58,7 +82,7 @@ export abstract class NotionAbstractService {
           title: properties[propertyNames.title].title
             .map(({ plain_text: text }: { plain_text: string }) => text)
             .join(""),
-          status: properties[propertyNames.status].select.name as Status,
+          status: properties[propertyNames.status][propertyTypes.status].name as Status,
           deadline: deadline ? new Date(deadline.start) : undefined,
         };
       });
@@ -70,11 +94,12 @@ export abstract class NotionAbstractService {
 
   async _fetchOneByOptions(
     { id }: FetchOneRequest,
-    { category, propertyNames }: GeneralOptions & FetchOneOptions
+    { category, propertyNames, propertyTypes }: GeneralOptions & FetchOneOptions
   ): Promise<FetchOneResponse> {
     try {
       const response: any = await this.notion.pages.retrieve({ page_id: id });
 
+      console.log({o: response.properties[propertyNames.status], type: propertyTypes.status, category})
       const deadline = response.properties[propertyNames.deadline].date?.start;
       return {
         id,
@@ -85,7 +110,7 @@ export abstract class NotionAbstractService {
         createdAt: new Date(response.created_time),
         updatedAt: new Date(response.last_edited_time),
         url: response.url,
-        status: response.properties[propertyNames.status].select.name,
+        status: response.properties[propertyNames.status][propertyTypes.status].name,
         deadline: deadline && new Date(deadline),
 
         tags: propertyNames.tags
@@ -112,16 +137,16 @@ export abstract class NotionAbstractService {
 
   async _updateOneByOptions(
     { taskId, status }: UpdateStatusRequest,
-    { propertyNames }: GeneralOptions
+    { propertyNames, propertyTypes }: GeneralOptions
   ) {
     const response = await this.notion.pages.update({
       page_id: taskId,
       properties: {
         [propertyNames.status]: {
-          select: {
+          [propertyTypes.status]: {
             name: status,
           },
-        },
+        } as any,
       },
     });
 

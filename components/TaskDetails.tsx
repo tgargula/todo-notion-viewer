@@ -28,6 +28,8 @@ const getCategory = (category: string) => {
       return "Scientific Group";
     case "beng":
       return "Engineering Thesis";
+    case "university":
+      return "University";
     default:
       return "Other";
   }

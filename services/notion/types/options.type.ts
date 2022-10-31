@@ -1,5 +1,5 @@
 import { Property } from ".";
-import { Category } from '../../../types/types';
+import { Category, Status } from '../../../types/types';
 
 interface PropertyNames extends Record<Property, string | null> {
   title: string;
@@ -11,15 +11,22 @@ interface PropertyNames extends Record<Property, string | null> {
   comments: string | null;
 }
 
+export type StatusType = 'status' | 'select';
+
+type PropertyTypes = {
+  status: StatusType;
+}
+
 export type GeneralOptions = {
   category: Category;
   databaseId: string;
   propertyNames: PropertyNames;
+  propertyTypes: PropertyTypes;
 };
 
 export type FetchManyOptions = {
   personFilterName: string | null;
-  status?: Array<string>;
+  status?: Array<Status>;
 };
 
 export type FetchOneOptions = {};
