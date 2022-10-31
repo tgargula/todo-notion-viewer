@@ -2,7 +2,7 @@
   "expo": {
     "name": "Notodo",
     "slug": "notodo",
-    "version": "1.3.0",
+    "version": "1.3.1",
     "orientation": "portrait",
     "icon": "./assets/notion.png",
     "userInterfaceStyle": "light",
@@ -28,6 +28,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "a8482eae-42f3-4cb9-bbe6-1c94bc530448"
+      }
     }
   }
 }
